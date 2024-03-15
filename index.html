@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API scatter filters</title>
-    <script src="//cdn.flourish.rocks/flourish-live-v5.min.js"></script>
+    <script src="//cdn.flourish.rocks/flourish-live-v5.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <!--Stylesheet link-->
-    <link rel="stylesheet" href="style.css"/>
 
-</head>
-<body>
+    <!--Stylesheet link-->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <h1>API scatter filters</h1>
     <label for="country">Select a country:</label>
     <select id="country">
-        <option value="">--Select Country--</option>
+      <option value="">--Select Country--</option>
     </select>
 
     <label for="region">Select a region:</label>
     <select id="region">
-        <option value="">--Select Region--</option>
+      <option value="">--Select Region--</option>
     </select>
-    
+
     <div id="visualization" class="chart"></div>
 
     <script src="app.js"></script>
-    
-</body>
+  </body>
 </html>
