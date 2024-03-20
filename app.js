@@ -47,6 +47,7 @@ d3.csv("/data/data.csv").then(function (csvData) {
     container: "#visualization",
     api_key: API_KEY,
     base_visualisation_id: base_chart,
+    base_visualisation_data_format: "object",
   };
 
   vis = new Flourish.Live(opts);
@@ -69,7 +70,22 @@ function updateVisualisation(selectedRegion, selectedCountry) {
 
   vis.update({
     data: { data: filteredData },
+    bindings: {
+      data:
+        // put in bindings here
+        null,
+    },
   });
 
   // Note: this ↑ doesn't work due to metadata issues
 }
+
+// Fetch 2 things: fetch the data (from local) and fetch the vis json from the public visualisation
+const fetched_data = d3.csv("/data/data.csv");
+const fetched_vis_json = d3.json(
+  "https://public.flourish.studio/visualisation/16988347/visualisation-object.json"
+);
+
+Promise.all([fetched_data, fetched_vis_json]).then((res) => {
+  console.log(res);
+});
