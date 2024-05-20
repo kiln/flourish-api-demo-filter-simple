@@ -1,11 +1,13 @@
 let data;
 let vis;
+let filteredData = []; // Define filteredData as a global variable
 
 d3.csv("/data/data.csv").then(function (csvData) {
   data = csvData; // Assign loaded data to the global variable
 
   // Populate the country dropdown
   const countryDropdown = document.getElementById("country");
+  // const countries = new Set(data.map((d) => d.country));
   data.forEach(function (d) {
     const option = document.createElement("option");
     option.text = d.country;
@@ -26,19 +28,19 @@ d3.csv("/data/data.csv").then(function (csvData) {
   });
 
   // Event listeners for dropdown menus
+  regionDropdown.addEventListener("change", function () {
+    const selectedRegion = this.value;
+    console.log("Selected region:", selectedRegion);
+    updateVisualisation(selectedRegion, null);
+  });
+
   countryDropdown.addEventListener("change", function () {
     const selectedCountry = this.value;
     console.log("Selected country:", selectedCountry);
     updateVisualisation(null, selectedCountry);
   });
 
-  regionDropdown.addEventListener("change", function () {
-    const selectedRegion = this.value;
-    console.log("Selected region:", selectedRegion);
-  });
-
   const base_chart = "16988347"; // Type Scatter version (20)
-  // const base_chart = "17170489"; // Non-typed Scatter version (14)
 
   const API_KEY =
     "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
@@ -53,34 +55,56 @@ d3.csv("/data/data.csv").then(function (csvData) {
   vis = new Flourish.Live(opts);
 });
 
-function convertToArrayOfArrays(array) {
-  const keys = Object.keys(array[0]);
-  const arrayOfArrays = array.map(Object.values);
-  arrayOfArrays.unshift(keys);
-  return arrayOfArrays;
-}
-
 function updateVisualisation(selectedRegion, selectedCountry) {
-  if (selectedRegion) {
-    filteredData = data.filter((d) => d.region == selectedRegion);
-  }
-  if (selectedCountry) {
-    filteredData = data.filter((d) => d.country == selectedCountry);
+  filteredData = data; // Update global filteredData variable
+  // This is to make the viz go to the default state if a user doesn't select any other region/country
+  if (selectedRegion === "All regions" && selectedCountry === "All countries") {
+    filteredData = data;
+  } else {
+    if (selectedRegion && selectedRegion !== "All regions") {
+      filteredData = data.filter((d) => d.region == selectedRegion);
+    }
+    if (selectedCountry && selectedCountry !== "All countries") {
+      filteredData = data.filter((d) => d.country == selectedCountry);
+    }
   }
 
+  // Update the visualisation
   vis.update({
     data: { data: filteredData },
     bindings: {
-      data:
-        // put in bindings here
-        null,
+      data: {
+        metadata: ["country", "region"],
+        x: "gdp",
+        y: "life expectancy",
+        color: "region",
+        size: "population",
+      },
+    },
+    state: {
+      x: {
+        title: "GDP",
+        title_mode: "custom",
+      },
+      y: {
+        title: "Life expectancy",
+        title_mode: "custom",
+      },
+    },
+    metadata: {
+      data: {
+        gdp: {
+          type_id: "number$point_comma",
+          type: "number",
+          output_format_id: "number$comma_point",
+        },
+      },
     },
   });
 
-  // Note: this ↑ doesn't work due to metadata issues
+  filteredData = filteredData.slice();
 }
 
-// Fetch 2 things: fetch the data (from local) and fetch the vis json from the public visualisation
 const fetched_data = d3.csv("/data/data.csv");
 const fetched_vis_json = d3.json(
   "https://public.flourish.studio/visualisation/16988347/visualisation-object.json"
@@ -89,3 +113,59 @@ const fetched_vis_json = d3.json(
 Promise.all([fetched_data, fetched_vis_json]).then((res) => {
   console.log(res);
 });
+
+// Data download button
+
+// Define the downloadCsv function
+function downloadCsv(csvData, filename) {
+  const csvFile = new Blob([csvData], { type: "text/csv" });
+  const downloadLink = document.createElement("a");
+  downloadLink.href = URL.createObjectURL(csvFile);
+  downloadLink.download = filename;
+  downloadLink.style.display = "none";
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
+// Event listener for downloading the filtered data as a CSV file
+document.getElementById("data-download").addEventListener("click", function () {
+  const countryDropdown = document.getElementById("country");
+  const regionDropdown = document.getElementById("region");
+
+  const selectedCountry = countryDropdown.value;
+  const selectedRegion = regionDropdown.value;
+
+  // Check if both dropdowns are set to the default "All" options
+  if (selectedCountry === "All countries" && selectedRegion === "All regions") {
+    const allDataCsv = d3.csvFormat(data);
+    downloadCsv(allDataCsv, "all_data.csv");
+  } else {
+    // Check if filteredData is defined and not empty
+    if (filteredData && filteredData.length > 0) {
+      const filteredDataCsv = d3.csvFormat(filteredData);
+      downloadCsv(filteredDataCsv, "filtered_data.csv");
+    } else {
+      console.log("No data to download");
+    }
+  }
+});
+
+// Image Download button
+var snapshot_options = {
+  download: true,
+  format: "png", // Formats available include png, jpg & svg
+  filename: "scatter_filters",
+  scale: 2,
+};
+
+document
+  .getElementById("image-download")
+  .addEventListener("click", function () {
+    vis.snapshot(snapshot_options, function (error, data) {
+      if (error) {
+        console.error(error);
+        return;
+      }
+    });
+  });
