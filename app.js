@@ -2,7 +2,7 @@ let data;
 let vis;
 let filteredData = []; // Define filteredData as a global variable
 
-d3.csv("/data/data.csv").then(function (csvData) {
+d3.csv("./data/data.csv").then(function (csvData) {
   data = csvData; // Assign loaded data to the global variable
 
   // Populate the country dropdown
@@ -52,6 +52,7 @@ d3.csv("/data/data.csv").then(function (csvData) {
     base_visualisation_data_format: "object",
   };
 
+  console.log("initial", opts);
   vis = new Flourish.Live(opts);
 });
 
@@ -105,7 +106,7 @@ function updateVisualisation(selectedRegion, selectedCountry) {
   filteredData = filteredData.slice();
 }
 
-const fetched_data = d3.csv("/data/data.csv");
+const fetched_data = d3.csv("./data/data.csv");
 const fetched_vis_json = d3.json(
   "https://public.flourish.studio/visualisation/16988347/visualisation-object.json"
 );
