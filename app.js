@@ -90,15 +90,6 @@ function updateVisualisation(selectedRegion, selectedCountry) {
   filteredData = filteredData.slice();
 }
 
-const fetched_data = d3.csv("./data/data.csv");
-const fetched_vis_json = d3.json(
-  "https://public.flourish.studio/visualisation/16988347/visualisation-object.json"
-);
-
-Promise.all([fetched_data, fetched_vis_json]).then((res) => {
-  console.log(res);
-});
-
 // Data download button
 
 // Define the downloadCsv function
