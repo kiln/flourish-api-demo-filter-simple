@@ -1,8 +1,9 @@
-// Global variables
-const base_chart = "16988347";
+// Constants
+const BASE_CHART = "16988347";
 const API_KEY =
   "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
 
+// Global variables
 let data;
 let vis;
 let filteredData = [];
@@ -11,15 +12,17 @@ let filteredData = [];
 function updateVisualisation(selectedRegion) {
   filteredData = data; // Update global filteredData variable
 
-  // Guard against (unlikely) non-selection, reset and filter data
+  // Guard against (unlikely) non-selection
   if (!selectedRegion) {
     console.warn("No region selected");
     return;
-  } else if (selectedRegion === "All regions") {
-    filteredData = data;
-  } else {
-    filteredData = data.filter((d) => d.region == selectedRegion);
   }
+
+  // Reset and filter data
+  filteredData =
+    selectedRegion === "All regions"
+      ? data
+      : data.filter((d) => d.region === selectedRegion);
 
   // Update the visualisation
   vis.update({
@@ -45,6 +48,7 @@ function updateVisualisation(selectedRegion) {
   });
 }
 
+// Region dropdown
 function buildRegionDropdown(data) {
   // Create a Set to store unique regions
   const uniqueRegions = new Set(data.map((d) => d.region));
@@ -75,7 +79,7 @@ d3.csv("./data/data.csv").then(function (csvData) {
   const opts = {
     container: "#visualization",
     api_key: API_KEY,
-    base_visualisation_id: base_chart,
+    base_visualisation_id: BASE_CHART,
     base_visualisation_data_format: "object",
   };
 
@@ -83,9 +87,9 @@ d3.csv("./data/data.csv").then(function (csvData) {
   vis = new Flourish.Live(opts);
 });
 
-// Data download button
+/* Data download */
 
-// Define the downloadCsv function
+// Download function
 function downloadCsv(csvData, filename) {
   const csvFile = new Blob([csvData], { type: "text/csv" });
   const downloadLink = document.createElement("a");
@@ -97,28 +101,23 @@ function downloadCsv(csvData, filename) {
   document.body.removeChild(downloadLink);
 }
 
-// Event listener for downloading the filtered data as a CSV file
+// Listener and handler
 document.getElementById("data-download").addEventListener("click", function () {
   const regionDropdown = document.getElementById("region");
-
   const selectedRegion = regionDropdown.value;
+  const csvData = selectedRegion === "All regions" ? data : filteredData;
 
-  if (selectedRegion === "All regions") {
-    // Check if we need to get the full data
-    const allDataCsv = d3.csvFormat(data);
-    downloadCsv(allDataCsv, "all_data.csv");
+  if (csvData.length > 0) {
+    const fileName = selectedRegion.toLowerCase().replace(/[^a-z0-9_]/g, "");
+    downloadCsv(d3.csvFormat(csvData), `${fileName}_data.csv`);
   } else {
-    // Check if filteredData is defined and not empty
-    if (filteredData && filteredData.length > 0) {
-      const filteredDataCsv = d3.csvFormat(filteredData);
-      downloadCsv(filteredDataCsv, "filtered_data.csv");
-    } else {
-      console.log("No data to download");
-    }
+    console.log("No data to download");
   }
 });
 
-// Image Download button
+/* Image download */
+
+// Options
 var snapshot_options = {
   download: true,
   format: "png", // Formats available include png, jpg & svg
@@ -126,10 +125,12 @@ var snapshot_options = {
   scale: 2,
 };
 
+// Listener and handler
 document
   .getElementById("image-download")
   .addEventListener("click", function () {
     vis.snapshot(snapshot_options, function (error, data) {
+      console.log(data);
       if (error) {
         console.error(error);
         return;
