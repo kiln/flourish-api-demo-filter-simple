@@ -1,3 +1,8 @@
+// Global variables
+const base_chart = "16988347"; // Type Scatter version (20)
+const API_KEY =
+  "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
+
 let data;
 let vis;
 let filteredData = []; // Define filteredData as a global variable
@@ -52,10 +57,7 @@ function updateVisualisation(selectedRegion) {
   filteredData = filteredData.slice();
 }
 
-// Initial load and set up
-d3.csv("./data/data.csv").then(function (csvData) {
-  data = csvData; // Assign loaded data to the global variable
-
+function buildRegionDropdown(data) {
   // Create a Set to store unique regions
   const uniqueRegions = new Set(data.map((d) => d.region));
 
@@ -72,13 +74,15 @@ d3.csv("./data/data.csv").then(function (csvData) {
   regionDropdown.addEventListener("change", function () {
     const selectedRegion = this.value;
     console.log("Selected region:", selectedRegion);
-    updateVisualisation(selectedRegion, null);
+    updateVisualisation(selectedRegion);
   });
+}
 
-  const base_chart = "16988347"; // Type Scatter version (20)
-
-  const API_KEY =
-    "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
+// Initial load and set up
+d3.csv("./data/data.csv").then(function (csvData) {
+  // Assign loaded data to the global variable
+  data = csvData;
+  buildRegionDropdown(data);
 
   const opts = {
     container: "#visualization",
