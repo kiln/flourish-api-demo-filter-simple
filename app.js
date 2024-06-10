@@ -33,16 +33,6 @@ function updateVisualisation(selectedRegion) {
         size: "population",
       },
     },
-    state: {
-      x: {
-        title: "GDP",
-        title_mode: "custom",
-      },
-      y: {
-        title: "Life expectancy",
-        title_mode: "custom",
-      },
-    },
     metadata: {
       data: {
         gdp: {
@@ -53,8 +43,6 @@ function updateVisualisation(selectedRegion) {
       },
     },
   });
-
-  filteredData = filteredData.slice();
 }
 
 function buildRegionDropdown(data) {
