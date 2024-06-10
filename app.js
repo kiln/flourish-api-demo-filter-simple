@@ -1,11 +1,11 @@
 // Global variables
-const base_chart = "16988347"; // Type Scatter version (20)
+const base_chart = "16988347";
 const API_KEY =
   "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
 
 let data;
 let vis;
-let filteredData = []; // Define filteredData as a global variable
+let filteredData = [];
 
 // Update function
 function updateVisualisation(selectedRegion) {
