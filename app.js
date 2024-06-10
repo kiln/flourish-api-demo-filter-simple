@@ -5,16 +5,6 @@ let filteredData = []; // Define filteredData as a global variable
 d3.csv("./data/data.csv").then(function (csvData) {
   data = csvData; // Assign loaded data to the global variable
 
-  // Populate the country dropdown
-  const countryDropdown = document.getElementById("country");
-  // const countries = new Set(data.map((d) => d.country));
-  data.forEach(function (d) {
-    const option = document.createElement("option");
-    option.text = d.country;
-    option.value = d.country;
-    countryDropdown.appendChild(option);
-  });
-
   // Create a Set to store unique regions
   const uniqueRegions = new Set(data.map((d) => d.region));
 
@@ -32,12 +22,6 @@ d3.csv("./data/data.csv").then(function (csvData) {
     const selectedRegion = this.value;
     console.log("Selected region:", selectedRegion);
     updateVisualisation(selectedRegion, null);
-  });
-
-  countryDropdown.addEventListener("change", function () {
-    const selectedCountry = this.value;
-    console.log("Selected country:", selectedCountry);
-    updateVisualisation(null, selectedCountry);
   });
 
   const base_chart = "16988347"; // Type Scatter version (20)
