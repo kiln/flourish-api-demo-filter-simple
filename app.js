@@ -99,14 +99,12 @@ function downloadCsv(csvData, filename) {
 
 // Event listener for downloading the filtered data as a CSV file
 document.getElementById("data-download").addEventListener("click", function () {
-  const countryDropdown = document.getElementById("country");
   const regionDropdown = document.getElementById("region");
 
-  const selectedCountry = countryDropdown.value;
   const selectedRegion = regionDropdown.value;
 
-  // Check if both dropdowns are set to the default "All" options
-  if (selectedCountry === "All countries" && selectedRegion === "All regions") {
+  if (selectedRegion === "All regions") {
+    // Check if we need to get the full data
     const allDataCsv = d3.csvFormat(data);
     downloadCsv(allDataCsv, "all_data.csv");
   } else {
