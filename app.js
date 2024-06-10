@@ -2,56 +2,18 @@ let data;
 let vis;
 let filteredData = []; // Define filteredData as a global variable
 
-d3.csv("./data/data.csv").then(function (csvData) {
-  data = csvData; // Assign loaded data to the global variable
-
-  // Create a Set to store unique regions
-  const uniqueRegions = new Set(data.map((d) => d.region));
-
-  // Populate the region dropdown
-  const regionDropdown = document.getElementById("region");
-  uniqueRegions.forEach((region) => {
-    const option = document.createElement("option");
-    option.text = region;
-    option.value = region;
-    regionDropdown.appendChild(option);
-  });
-
-  // Event listeners for dropdown menus
-  regionDropdown.addEventListener("change", function () {
-    const selectedRegion = this.value;
-    console.log("Selected region:", selectedRegion);
-    updateVisualisation(selectedRegion, null);
-  });
-
-  const base_chart = "16988347"; // Type Scatter version (20)
-
-  const API_KEY =
-    "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
-
-  const opts = {
-    container: "#visualization",
-    api_key: API_KEY,
-    base_visualisation_id: base_chart,
-    base_visualisation_data_format: "object",
-  };
-
-  console.log("initial", opts);
-  vis = new Flourish.Live(opts);
-});
-
-function updateVisualisation(selectedRegion, selectedCountry) {
+// Update function
+function updateVisualisation(selectedRegion) {
   filteredData = data; // Update global filteredData variable
-  // This is to make the viz go to the default state if a user doesn't select any other region/country
-  if (selectedRegion === "All regions" && selectedCountry === "All countries") {
+
+  // Guard against (unlikely) non-selection, reset and filter data
+  if (!selectedRegion) {
+    console.warn("No region selected");
+    return;
+  } else if (selectedRegion === "All regions") {
     filteredData = data;
   } else {
-    if (selectedRegion && selectedRegion !== "All regions") {
-      filteredData = data.filter((d) => d.region == selectedRegion);
-    }
-    if (selectedCountry && selectedCountry !== "All countries") {
-      filteredData = data.filter((d) => d.country == selectedCountry);
-    }
+    filteredData = data.filter((d) => d.region == selectedRegion);
   }
 
   // Update the visualisation
@@ -89,6 +51,45 @@ function updateVisualisation(selectedRegion, selectedCountry) {
 
   filteredData = filteredData.slice();
 }
+
+// Initial load and set up
+d3.csv("./data/data.csv").then(function (csvData) {
+  data = csvData; // Assign loaded data to the global variable
+
+  // Create a Set to store unique regions
+  const uniqueRegions = new Set(data.map((d) => d.region));
+
+  // Populate the region dropdown
+  const regionDropdown = document.getElementById("region");
+  uniqueRegions.forEach((region) => {
+    const option = document.createElement("option");
+    option.text = region;
+    option.value = region;
+    regionDropdown.appendChild(option);
+  });
+
+  // Event listeners for dropdown menus
+  regionDropdown.addEventListener("change", function () {
+    const selectedRegion = this.value;
+    console.log("Selected region:", selectedRegion);
+    updateVisualisation(selectedRegion, null);
+  });
+
+  const base_chart = "16988347"; // Type Scatter version (20)
+
+  const API_KEY =
+    "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
+
+  const opts = {
+    container: "#visualization",
+    api_key: API_KEY,
+    base_visualisation_id: base_chart,
+    base_visualisation_data_format: "object",
+  };
+
+  console.log("initial", opts);
+  vis = new Flourish.Live(opts);
+});
 
 // Data download button
 
