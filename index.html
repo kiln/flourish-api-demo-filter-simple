@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API scatter filters</title>
+    <script src="//cdn.flourish.rocks/flourish-live-v5.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!--Stylesheet link-->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>API scatter filters</h1>
+
+    <div id="dropdown">
+      <label for="region">Select a region:</label>
+      <select id="region">
+        <option value="All regions">All regions</option>
+      </select>
+    </div>
+
+    <div id="visualization" class="chart"></div>
+
+    <div class="button-container">
+      <button id="data-download">Download data</button>
+      <button id="image-download">Download image</button>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
