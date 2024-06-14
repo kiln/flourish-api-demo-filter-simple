@@ -16,6 +16,10 @@ body {
 #dropdown {
   font-family: "Poppins", sans-serif;
   text-align: center;
+
+  &select {
+    font-family: "Poppins", sans-serif;
+  }
 }
 
 button {
@@ -25,8 +29,7 @@ button {
   color: #333333;
   cursor: pointer;
   display: inline-block;
-  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -43,6 +46,12 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: rgba(51, 51, 51, 0.8);
+    color: white;
+  }
 }
 
 .button-container {
@@ -50,17 +59,6 @@ button {
   justify-content: center;
   gap: 10px;
   flex-direction: row;
-}
-
-.button {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  background-color: rgba(51, 51, 51, 0.4);
-  color: white;
-}
-.button:hover {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  background-color: rgba(51, 51, 51, 0.8);
-  color: white;
 }
 
 #visualization.chart {

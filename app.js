@@ -1,7 +1,6 @@
 // Constants
 const BASE_CHART = "16988347";
-const API_KEY =
-  "maTVMy09AawpCItN_0vZBQ6mk9ibYYZXI8NCp4wXvPq-aolt2nReb7oBrD0m3SHw";
+const API_KEY = "<ADD YOUR API KEY HERE>";
 
 // Global variables
 let data;
@@ -22,23 +21,23 @@ function updateVisualisation(selectedRegion) {
   filteredData =
     selectedRegion === "All regions"
       ? data
-      : data.filter((d) => d.region === selectedRegion);
+      : data.filter((d) => d.Region === selectedRegion);
 
   // Update the visualisation
   vis.update({
     data: { data: filteredData },
     bindings: {
       data: {
-        metadata: ["country", "region"],
-        x: "gdp",
-        y: "life expectancy",
-        color: "region",
-        size: "population",
+        metadata: ["Country", "Region"],
+        x: "GDP",
+        y: "Life expectancy",
+        color: "Region",
+        size: "Population",
       },
     },
     metadata: {
       data: {
-        gdp: {
+        GDP: {
           type_id: "number$point_comma",
           type: "number",
           output_format_id: "number$comma_point",
@@ -51,7 +50,7 @@ function updateVisualisation(selectedRegion) {
 // Region dropdown
 function buildRegionDropdown(data) {
   // Create a Set to store unique regions
-  const uniqueRegions = new Set(data.map((d) => d.region));
+  const uniqueRegions = new Set(data.map((d) => d.Region));
 
   // Populate the region dropdown
   const regionDropdown = document.getElementById("region");
